@@ -98,7 +98,7 @@ class _NotificationListWrapper<T> extends StatelessWidget {
       child: LoadMoreWidget(
         loadMore: loadMore,
         child: ListView.builder(
-          padding: EdgeInsets.only(bottom: 20),
+          padding: const EdgeInsets.only(bottom: 20),
           itemCount: items.length,
           itemBuilder: (context, index) {
             return itemBuilder(context, items[index]);

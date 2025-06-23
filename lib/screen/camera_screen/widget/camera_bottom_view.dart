@@ -1,10 +1,10 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shortzz/common/extensions/string_extension.dart';
+// import 'package:shortzz/common/extensions/string_extension.dart';  // Temporarily unused
 import 'package:shortzz/common/widget/custom_border_round_icon.dart';
 import 'package:shortzz/common/widget/dashed_circle_painter.dart';
-import 'package:shortzz/model/general/settings_model.dart';
+// import 'package:shortzz/model/general/settings_model.dart';  // Temporarily unused
 import 'package:shortzz/screen/camera_screen/camera_screen.dart';
 import 'package:shortzz/screen/camera_screen/camera_screen_controller.dart';
 import 'package:shortzz/utilities/app_res.dart';
@@ -85,73 +85,80 @@ class _EffectList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<DeepARFilters> deepARFilters =
-        controller.appSetting?.deepARFilters ?? [];
-    deepARFilters.insert(
-        0, DeepARFilters(id: -1, title: 'None', image: AssetRes.icNoFilter));
-    return SizedBox(
+    // Temporarily disabled for simulator
+    // List<DeepARFilters> deepARFilters =
+    //     controller.appSetting?.deepARFilters ?? [];
+    // deepARFilters.insert(
+    //     0, DeepARFilters(id: -1, title: 'None', image: AssetRes.icNoFilter));
+    return const SizedBox(
       height: 89,
-      child: ListView.builder(
-        itemCount: deepARFilters.length,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          DeepARFilters effect = deepARFilters[index];
-
-          return InkWell(
-            onTap: () => controller.applyARFilterEffect(effect),
-            child: Obx(() {
-              final isSelected = controller.selectedEffect.value == effect;
-              final borderColor =
-                  whitePure(context).withAlpha(isSelected ? 255 : 76);
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                width: 79,
-                height: 89,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Filter thumbnail
-                    Container(
-                      height: 64,
-                      width: 64,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: borderColor, width: 2),
-                      ),
-                      padding: const EdgeInsets.all(3),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: whitePure(context),
-                          shape: BoxShape.circle,
-                        ),
-                        child: ClipSmoothRect(
-                          radius: SmoothBorderRadius(cornerRadius: 30),
-                          child: effect.id == -1
-                              ? Image.asset(effect.image ?? '',
-                                  height: 36, width: 36)
-                              : Image.network(effect.image?.addBaseURL() ?? '',
-                                  height: 36, width: 36),
-                        ),
-                      ),
-                    ),
-
-                    // Filter name
-                    Text(
-                      effect.title ?? '',
-                      style: TextStyleCustom.outFitLight300(
-                        color: whitePure(context),
-                        fontSize: 13,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              );
-            }),
-          );
-        },
+      child: Center(
+        child: Text(
+          'AR Filters (Disabled for Simulator)',
+          style: TextStyle(color: Colors.white54),
+        ),
       ),
+      // child: ListView.builder(
+      //   itemCount: deepARFilters.length,
+      //   scrollDirection: Axis.horizontal,
+      //   itemBuilder: (context, index) {
+      //     DeepARFilters effect = deepARFilters[index];
+
+      //     return InkWell(
+      //       onTap: () => controller.applyARFilterEffect(effect),
+      //       child: Obx(() {
+      //         final isSelected = controller.selectedEffect.value == effect;
+      //         final borderColor =
+      //             whitePure(context).withAlpha(isSelected ? 255 : 76);
+      //         return Container(
+      //           margin: const EdgeInsets.symmetric(horizontal: 10),
+      //           width: 79,
+      //           height: 89,
+      //           child: Column(
+      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //             children: [
+      //               // Filter thumbnail
+      //               Container(
+      //                 height: 64,
+      //                 width: 64,
+      //                 decoration: BoxDecoration(
+      //                   shape: BoxShape.circle,
+      //                   border: Border.all(color: borderColor, width: 2),
+      //                 ),
+      //                 padding: const EdgeInsets.all(3),
+      //                 child: Container(
+      //                   decoration: BoxDecoration(
+      //                     color: whitePure(context),
+      //                     shape: BoxShape.circle,
+      //                   ),
+      //                   child: ClipSmoothRect(
+      //                     radius: SmoothBorderRadius(cornerRadius: 30),
+      //                     child: effect.id == -1
+      //                         ? Image.asset(effect.image ?? '',
+      //                             height: 36, width: 36)
+      //                         : Image.network(effect.image?.addBaseURL() ?? '',
+      //                             height: 36, width: 36),
+      //                   ),
+      //                 ),
+      //               ),
+
+      //               // Filter name
+      //               Text(
+      //                 effect.title ?? '',
+      //                 style: TextStyleCustom.outFitLight300(
+      //                   color: whitePure(context),
+      //                   fontSize: 13,
+      //                 ),
+      //                 maxLines: 1,
+      //                 overflow: TextOverflow.ellipsis,
+      //               ),
+      //             ],
+      //           ),
+      //         );
+      //       }),
+      //     );
+      //   },
+      // ),
     );
   }
 }

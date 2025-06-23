@@ -80,7 +80,7 @@ dependencies:
   #  cached_video_player_plus: ^3.0.3
   video_compress: ^3.1.4
   flutter_image_compress: ^2.4.0
-  deepar_flutter_plus: ^0.2.0
+  # deepar_flutter_plus: ^0.2.0  # Temporarily disabled for simulator testing
   flutter_native_video_trimmer: ^1.1.9
 
   ### 🧭 Location & Maps

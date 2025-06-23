@@ -1,11 +1,11 @@
-import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
+// import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';  // Temporarily disabled for simulator
 import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:retrytech_plugin/retrytech_plugin.dart';
 import 'package:shortzz/common/widget/black_gradient_shadow.dart';
 import 'package:shortzz/common/widget/custom_border_round_icon.dart';
-import 'package:shortzz/common/widget/loader_widget.dart';
+// import 'package:shortzz/common/widget/loader_widget.dart';  // Temporarily unused
 import 'package:shortzz/screen/camera_screen/camera_screen_controller.dart';
 import 'package:shortzz/screen/camera_screen/widget/camera_bottom_view.dart';
 import 'package:shortzz/screen/camera_screen/widget/camera_top_view.dart';
@@ -53,21 +53,24 @@ class CameraScreen extends StatelessWidget {
       aspectRatio: 0.52,
       child: ClipSmoothRect(
         radius: SmoothBorderRadius(cornerRadius: 20, cornerSmoothing: 1),
-        child: controller.isDeepAr
-            ? Obx(
-                () {
-                  DeepArControllerPlus deepArControllerPlus =
-                      controller.deepArControllerPlus.value;
-                  return controller.isDeepARInitialized.value
-                      ? Transform.scale(
-                          scale: deepArControllerPlus.aspectRatio *
-                              0.62, //change value as needed
-                          child: DeepArPreviewPlus(deepArControllerPlus),
-                        )
-                      : const LoaderWidget();
-                },
-              )
-            : RetrytechPlugin.shared.cameraView,
+        child:
+            // Temporarily disable DeepAR for simulator testing
+            // controller.isDeepAr
+            //     ? Obx(
+            //         () {
+            //           DeepArControllerPlus deepArControllerPlus =
+            //               controller.deepArControllerPlus.value;
+            //           return controller.isDeepARInitialized.value
+            //               ? Transform.scale(
+            //                   scale: deepArControllerPlus.aspectRatio *
+            //                       0.62, //change value as needed
+            //                   child: DeepArPreviewPlus(deepArControllerPlus),
+            //                 )
+            //               : const LoaderWidget();
+            //         },
+            //       )
+            //     :
+            RetrytechPlugin.shared.cameraView,
       ),
     );
   }

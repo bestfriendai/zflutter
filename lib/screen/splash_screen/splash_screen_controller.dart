@@ -27,20 +27,40 @@ class SplashScreenController extends BaseController {
 
   @override
   void onReady() {
+    print('🎮 SPLASH_CTRL: SplashScreenController onReady called');
     super.onReady();
 
-    Get.put(GifSheetController());
-    Get.put(FirebaseFirestoreController());
-    Future.wait([fetchSettings()]);
+    try {
+      print('🎮 SPLASH_CTRL: Creating GifSheetController...');
+      Get.put(GifSheetController());
+      print('✅ SPLASH_CTRL: GifSheetController created successfully');
 
-    _subscription = NetworkHelper().onConnectionChange.listen((status) {
-      isOnline = status;
-      if (isOnline) {
-        Get.back();
-      } else {
-        Get.to(() => const NoInternetSheet(), transition: Transition.downToUp);
-      }
-    });
+      print('🔥 SPLASH_CTRL: Creating FirebaseFirestoreController...');
+      Get.put(FirebaseFirestoreController());
+      print('✅ SPLASH_CTRL: FirebaseFirestoreController created successfully');
+
+      print('⚙️ SPLASH_CTRL: Starting fetchSettings...');
+      Future.wait([fetchSettings()]);
+      print('✅ SPLASH_CTRL: fetchSettings started successfully');
+
+      print('🌐 SPLASH_CTRL: Setting up network connection listener...');
+      _subscription = NetworkHelper().onConnectionChange.listen((status) {
+        print('🌐 SPLASH_CTRL: Network status changed: $status');
+        isOnline = status;
+        if (isOnline) {
+          print('✅ SPLASH_CTRL: Back online, closing no internet sheet');
+          Get.back();
+        } else {
+          print('❌ SPLASH_CTRL: Offline, showing no internet sheet');
+          Get.to(() => const NoInternetSheet(),
+              transition: Transition.downToUp);
+        }
+      });
+      print('✅ SPLASH_CTRL: Network listener setup complete');
+    } catch (e, st) {
+      print('❌ SPLASH_CTRL: Error in onReady: $e');
+      print('📋 SPLASH_CTRL: Stack trace: $st');
+    }
   }
 
   @override
@@ -50,39 +70,85 @@ class SplashScreenController extends BaseController {
   }
 
   Future<void> fetchSettings() async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    bool showNavigate = await CommonService.instance.fetchGlobalSettings();
-    if (showNavigate) {
-      final translations = Get.find<DynamicTranslations>();
-      var languages = SessionManager.instance.getSettings()?.languages ?? [];
-      List<Language> downloadLanguages =
-          languages.where((element) => element.status == 1).toList();
-      var downloadedFiles = await downloadAndParseLanguages(downloadLanguages);
+    print('⚙️ FETCH_SETTINGS: Starting fetchSettings...');
 
-      translations.addTranslations(downloadedFiles);
+    try {
+      print('⏱️ FETCH_SETTINGS: Waiting 500ms...');
+      await Future.delayed(const Duration(milliseconds: 500));
+      print('✅ FETCH_SETTINGS: Delay completed');
 
-      var defaultLang =
-          languages.firstWhereOrNull((element) => element.isDefault == 1);
+      print('🌐 FETCH_SETTINGS: Fetching global settings...');
+      bool showNavigate = await CommonService.instance.fetchGlobalSettings();
+      print(
+          '✅ FETCH_SETTINGS: Global settings fetched, showNavigate: $showNavigate');
 
-      if (defaultLang != null) {
-        SessionManager.instance.setFallbackLang(defaultLang.code ?? 'en');
-      }
+      if (showNavigate) {
+        print('🔍 FETCH_SETTINGS: Getting DynamicTranslations...');
+        final translations = Get.find<DynamicTranslations>();
+        print('✅ FETCH_SETTINGS: DynamicTranslations found');
 
-      RestartWidget.restartApp(Get.context!);
-      if (SessionManager.instance.isLogin()) {
-        UserService.instance
-            .fetchUserDetails(userId: SessionManager.instance.getUserID())
-            .then((value) {
-          if (value != null) {
-            Get.off(() => DashboardScreen(myUser: value));
-          } else {
-            Get.off(() => const LoginScreen());
-          }
-        });
+        print('🌍 FETCH_SETTINGS: Getting languages from settings...');
+        var languages = SessionManager.instance.getSettings()?.languages ?? [];
+        print('✅ FETCH_SETTINGS: Found ${languages.length} languages');
+
+        List<Language> downloadLanguages =
+            languages.where((element) => element.status == 1).toList();
+        print(
+            '✅ FETCH_SETTINGS: ${downloadLanguages.length} languages to download');
+
+        print('📥 FETCH_SETTINGS: Downloading and parsing languages...');
+        var downloadedFiles =
+            await downloadAndParseLanguages(downloadLanguages);
+        print('✅ FETCH_SETTINGS: Languages downloaded and parsed');
+
+        print('🔄 FETCH_SETTINGS: Adding translations...');
+        translations.addTranslations(downloadedFiles);
+        print('✅ FETCH_SETTINGS: Translations added');
+
+        print('🔍 FETCH_SETTINGS: Finding default language...');
+        var defaultLang =
+            languages.firstWhereOrNull((element) => element.isDefault == 1);
+
+        if (defaultLang != null) {
+          print(
+              '✅ FETCH_SETTINGS: Setting fallback language: ${defaultLang.code}');
+          SessionManager.instance.setFallbackLang(defaultLang.code ?? 'en');
+        } else {
+          print('⚠️ FETCH_SETTINGS: No default language found');
+        }
+
+        print('🔄 FETCH_SETTINGS: Restarting app...');
+        RestartWidget.restartApp(Get.context!);
+
+        print('👤 FETCH_SETTINGS: Checking login status...');
+        if (SessionManager.instance.isLogin()) {
+          print(
+              '✅ FETCH_SETTINGS: User is logged in, fetching user details...');
+          UserService.instance
+              .fetchUserDetails(userId: SessionManager.instance.getUserID())
+              .then((value) {
+            if (value != null) {
+              print(
+                  '✅ FETCH_SETTINGS: User details found, navigating to dashboard');
+              Get.off(() => DashboardScreen(myUser: value));
+            } else {
+              print(
+                  '❌ FETCH_SETTINGS: User details not found, navigating to login');
+              Get.off(() => const LoginScreen());
+            }
+          });
+        } else {
+          print(
+              '❌ FETCH_SETTINGS: User not logged in, navigating to language selection');
+          Get.off(() => const SelectLanguageScreen(
+              languageNavigationType: LanguageNavigationType.fromStart));
+        }
       } else {
-        Get.off(() => const SelectLanguageScreen(
-            languageNavigationType: LanguageNavigationType.fromStart));
+        print('❌ FETCH_SETTINGS: showNavigate is false, not proceeding');
       }
+    } catch (e, st) {
+      print('❌ FETCH_SETTINGS: Error in fetchSettings: $e');
+      print('📋 FETCH_SETTINGS: Stack trace: $st');
     }
   }
 

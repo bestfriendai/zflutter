@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
-import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
+// import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';  // Temporarily disabled for simulator
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+// import 'package:flutter_cache_manager/flutter_cache_manager.dart';  // Temporarily unused
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -25,7 +25,7 @@ import 'package:shortzz/screen/music_sheet/music_sheet.dart';
 import 'package:shortzz/screen/selected_music_sheet/selected_music_sheet.dart';
 import 'package:shortzz/screen/selected_music_sheet/selected_music_sheet_controller.dart';
 import 'package:shortzz/utilities/app_res.dart';
-import 'package:shortzz/utilities/asset_res.dart';
+// import 'package:shortzz/utilities/asset_res.dart';  // Temporarily unused
 
 class CameraScreenController extends BaseController
     with GetSingleTickerProviderStateMixin {
@@ -36,8 +36,12 @@ class CameraScreenController extends BaseController
   // Dependencies
   final CameraScreenType cameraType;
   final PlayerController audioPlayer = PlayerController();
-  final Rx<DeepArControllerPlus> deepArControllerPlus =
-      DeepArControllerPlus().obs;
+  // final Rx<DeepArControllerPlus> deepArControllerPlus =
+  //     DeepArControllerPlus().obs;  // Temporarily disabled for simulator
+
+  // Temporary null implementation for simulator testing
+  dynamic get deepArControllerPlus => _DeepArControllerPlusStub();
+
   RxBool isSecondListShow = true.obs;
 
   // State variables
@@ -52,9 +56,10 @@ class CameraScreenController extends BaseController
   RxBool isDeepARInitialized = false.obs;
 
   Setting? get appSetting => SessionManager.instance.getSettings();
-  late Rx<DeepARFilters> selectedEffect;
+  // late Rx<DeepARFilters> selectedEffect;  // Temporarily disabled for simulator
 
-  bool get isDeepAr => appSetting?.isDeepAr == 1;
+  bool get isDeepAr =>
+      false; // Temporarily disabled for simulator: appSetting?.isDeepAr == 1;
 
   // Private variables
   Timer? _progressTimer;
@@ -66,8 +71,8 @@ class CameraScreenController extends BaseController
   void onInit() {
     super.onInit();
     _initialize();
-    selectedEffect =
-        Rx(DeepARFilters(id: -1, title: 'None', image: AssetRes.icNoFilter));
+    // selectedEffect =
+    //     Rx(DeepARFilters(id: -1, title: 'None', image: AssetRes.icNoFilter));  // Temporarily disabled for simulator
   }
 
   @override
@@ -561,29 +566,30 @@ class CameraScreenController extends BaseController
     isStartingRecording.value = false;
   }
 
-  Future<void> applyARFilterEffect(DeepARFilters effect) async {
-    selectedEffect.value = effect;
+  // Temporarily disabled for simulator
+  // Future<void> applyARFilterEffect(DeepARFilters effect) async {
+  //   selectedEffect.value = effect;
 
-    try {
-      if (effect.id != -1) {
-        showLoader();
+  //   try {
+  //     if (effect.id != -1) {
+  //       showLoader();
 
-        // Download the AR effect file
-        final fileInfo = await DefaultCacheManager()
-            .downloadFile(effect.filterFile?.addBaseURL() ?? '');
+  //       // Download the AR effect file
+  //       final fileInfo = await DefaultCacheManager()
+  //           .downloadFile(effect.filterFile?.addBaseURL() ?? '');
 
-        // Stop loading indicator and apply the effect
-        stopLoader();
-        deepArControllerPlus.value.switchEffect(fileInfo.file.path);
-      } else {
-        // Clear the effect if ID is -1
-        deepArControllerPlus.value.switchEffect('');
-      }
-    } catch (e, stackTrace) {
-      stopLoader();
-      Loggers.error('Failed to apply AR filter: $e\n$stackTrace');
-    }
-  }
+  //       // Stop loading indicator and apply the effect
+  //       stopLoader();
+  //       deepArControllerPlus.value.switchEffect(fileInfo.file.path);
+  //     } else {
+  //       // Clear the effect if ID is -1
+  //       deepArControllerPlus.value.switchEffect('');
+  //     }
+  //   } catch (e, stackTrace) {
+  //     stopLoader();
+  //     Loggers.error('Failed to apply AR filter: $e\n$stackTrace');
+  //   }
+  // }
 }
 
 enum PostStoryContentType { reel, storyText, storyImage, storyVideo }
@@ -610,3 +616,28 @@ class PostStoryContent {
       this.thumbnailBytes,
       this.hasAudio = true});
 }
+
+// Temporary stub classes for DeepAR functionality (disabled for simulator)
+class _DeepArControllerPlusStub {
+  _DeepArControllerPlusValueStub get value => _DeepArControllerPlusValueStub();
+}
+
+class _DeepArControllerPlusValueStub {
+  void fireTrigger({String? trigger}) {}
+  Future<void> initialize(
+      {String? androidLicenseKey,
+      String? iosLicenseKey,
+      dynamic resolution}) async {}
+  void switchEffect(String effect) {}
+  void destroy() {}
+  void toggleFlash() {}
+  void flipCamera() {}
+  Future<void> startVideoRecording() async {}
+  Future<dynamic> stopVideoRecording() async =>
+      throw UnimplementedError('DeepAR disabled for simulator');
+  Future<dynamic> takeScreenshot() async =>
+      throw UnimplementedError('DeepAR disabled for simulator');
+}
+
+// Temporary enum for Resolution (normally from deepar_flutter_plus)
+enum Resolution { high, medium, low }
