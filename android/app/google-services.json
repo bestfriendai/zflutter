@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "579171100731",
+    "project_id": "zsocial-fe072",
+    "storage_bucket": "zsocial-fe072.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:579171100731:android:d4cc9fa50a292a8d5a941e",
+        "android_client_info": {
+          "package_name": "app.z.social"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "579171100731-h852o38d10qs665ckuturtjntrvfn3np.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.z.social",
+            "certificate_hash": "041eb38889f39f80276060d440982685da02ae61"
+          }
+        },
+        {
+          "client_id": "579171100731-ihit3be1j8k4fih68hbgnjk45lo4vt34.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgEfNvi7fNSK3oGuokaLUIxlbogqvGxvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "579171100731-ihit3be1j8k4fih68hbgnjk45lo4vt34.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "579171100731-njfl08gvjmat4s1k5one13k18nmjofmh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.z.social"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:579171100731:android:f3a68a54b76c99755a941e",
+        "android_client_info": {
+          "package_name": "com.retrytech.shortzz.apps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "579171100731-ihit3be1j8k4fih68hbgnjk45lo4vt34.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgEfNvi7fNSK3oGuokaLUIxlbogqvGxvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "579171100731-ihit3be1j8k4fih68hbgnjk45lo4vt34.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "579171100731-njfl08gvjmat4s1k5one13k18nmjofmh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.z.social"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
