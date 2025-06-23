@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAgEfNvi7fNSK3oGuokaLUIxlbogqvGxvo',
-    appId: '1:579171100731:android:f3a68a54b76c99755a941e',
+    appId: '1:579171100731:android:d4cc9fa50a292a8d5a941e',
     messagingSenderId: '579171100731',
     projectId: 'zsocial-fe072',
     storageBucket: 'zsocial-fe072.firebasestorage.app',
@@ -59,12 +59,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyClTyF5xRtil7Tgq_uPEAPIFg3EzLGKj7c',
-    appId: '1:579171100731:ios:63b2aee84d8b0e5a5a941e',
+    appId: '1:579171100731:ios:a7046e9e8ab5a73e5a941e',
     messagingSenderId: '579171100731',
     projectId: 'zsocial-fe072',
     storageBucket: 'zsocial-fe072.firebasestorage.app',
     androidClientId: '579171100731-h852o38d10qs665ckuturtjntrvfn3np.apps.googleusercontent.com',
-    iosClientId: '579171100731-v39hnraor2aetpr5p53t5h8gmh4qpvuv.apps.googleusercontent.com',
-    iosBundleId: 'com.retrytech.bubbly',
+    iosClientId: '579171100731-njfl08gvjmat4s1k5one13k18nmjofmh.apps.googleusercontent.com',
+    iosBundleId: 'app.z.social',
   );
+
 }
