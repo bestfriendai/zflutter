@@ -1,8 +1,8 @@
 # Uncomment this line to define a global platform for your project
-platform :ios, '15.5'
+platform :ios, '16.0'
 
 # add this line:
-$iOSVersion = '15.5'  # or newer version
+$iOSVersion = '16.0'  # or newer version
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
