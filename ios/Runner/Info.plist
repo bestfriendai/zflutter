@@ -39,7 +39,7 @@
 			<string>Google Sign in</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.463711886346-1a94m5n1asum7bvf345ekrob1cr2e3a3</string>
+				<string>com.googleusercontent.apps.579171100731-njfl08gvjmat4s1k5one13k18nmjofmh</string>
 			</array>
 		</dict>
 		<dict>
@@ -49,7 +49,7 @@
 			<string>Branch URL Scheme</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>your_ios_scheme</string>
+				<string>shortzz</string>
 			</array>
 		</dict>
 	</array>
@@ -85,6 +85,13 @@
 	<string>This app needs permission to save images to your gallery.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app requires access to your photo library to allow you to select a profile photo.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>This app uses the local network to discover and connect to nearby devices for enhanced functionality.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_dartobservatory._tcp</string>
+		<string>_dartobservatory._tcp.</string>
+	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -110,11 +117,11 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>branch_key</key>
-	<string>your_branch_key</string>
+	<string>key_live_kqtbuDA7YlSbYoY9HL5F0cemEzehlhQg</string>
 	<key>branch_universal_link_domains</key>
 	<array>
-		<string>your_default_link_domain</string>
-		<string>your_alternate_link_domain</string>
+		<string>shortzz.app.link</string>
+		<string>shortzz-alternate.app.link</string>
 	</array>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>

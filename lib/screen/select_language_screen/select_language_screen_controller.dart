@@ -54,9 +54,14 @@ class SelectLanguageScreenController extends BaseController {
         languages.add(element);
       }
     }
-    selectedLanguage.value = languages.firstWhere((element) {
-      return element.code == SessionManager.instance.getLang();
-    }) as Language?;
+    try {
+      selectedLanguage.value = languages.firstWhere((element) {
+        return element.code == SessionManager.instance.getLang();
+      });
+    } catch (e) {
+      // If no matching language found, select the first available language
+      selectedLanguage.value = languages.isNotEmpty ? languages.first : null;
+    }
   }
 
   void onLanguageChange(Language? value) {

@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
+// import 'package:flutter_branch_sdk/flutter_branch_sdk.dart'; // Temporarily disabled
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:shortzz/common/controller/base_controller.dart';
@@ -122,39 +122,40 @@ class HomeScreenController extends BaseController
   }
 
   Future<void> _readDeepLink() async {
-    streamSubscription = FlutterBranchSdk.listSession().listen((data) async {
-      if (data.containsKey("+clicked_branch_link") &&
-          data["+clicked_branch_link"] == true) {
-        await Future.delayed(const Duration(milliseconds: 500));
-        if (data[Params.postId] != null) {
-          int postId = int.parse(data[Params.postId]);
-          PostByIdModel model =
-              await PostService.instance.fetchPostById(postId: postId);
-          if (model.status == true) {
-            Post? post = model.data?.post;
-            if (post != null) {
-              if (post.postType == PostType.reel) {
-                await Get.to(() => ReelsScreen(reels: [post].obs, position: 0),
-                    preventDuplicates: false);
-              } else if ([PostType.image, PostType.video, PostType.text]
-                  .contains(post.postType)) {
-                await Get.to(() =>
-                    SinglePostScreen(post: post, isFromNotification: true));
-              }
-            }
-          }
-        } else if (data[Params.userId] != null) {
-          int userId = int.parse(data[Params.userId]);
-          User? user =
-              await UserService.instance.fetchUserDetails(userId: userId);
-          if (user != null) {
-            await NavigationService.shared.openProfileScreen(user);
-          }
-        }
-      }
-    }, onError: (error) {
-      Loggers.error('listSession error: ${error.toString()}');
-    });
+    // Temporarily disabled Branch SDK for simulator testing
+    // streamSubscription = FlutterBranchSdk.listSession().listen((data) async {
+    //   if (data.containsKey("+clicked_branch_link") &&
+    //       data["+clicked_branch_link"] == true) {
+    //     await Future.delayed(const Duration(milliseconds: 500));
+    //     if (data[Params.postId] != null) {
+    //       int postId = int.parse(data[Params.postId]);
+    //       PostByIdModel model =
+    //           await PostService.instance.fetchPostById(postId: postId);
+    //       if (model.status == true) {
+    //         Post? post = model.data?.post;
+    //         if (post != null) {
+    //           if (post.postType == PostType.reel) {
+    //             await Get.to(() => ReelsScreen(reels: [post].obs, position: 0),
+    //                 preventDuplicates: false);
+    //           } else if ([PostType.image, PostType.video, PostType.text]
+    //               .contains(post.postType)) {
+    //             await Get.to(() =>
+    //                 SinglePostScreen(post: post, isFromNotification: true));
+    //           }
+    //         }
+    //       }
+    //     } else if (data[Params.userId] != null) {
+    //       int userId = int.parse(data[Params.userId]);
+    //       User? user =
+    //           await UserService.instance.fetchUserDetails(userId: userId);
+    //       if (user != null) {
+    //         await NavigationService.shared.openProfileScreen(user);
+    //       }
+    //     }
+    //   }
+    // }, onError: (error) {
+    //   Loggers.error('listSession error: ${error.toString()}');
+    // });
   }
 
   Future<void> onRefreshPage({bool reset = true}) async {

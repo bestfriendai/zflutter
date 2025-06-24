@@ -23,8 +23,10 @@ class OnBoardingScreen extends StatelessWidget {
         children: [
           const ThemeBlurBg(),
           // Image View
-          Obx(() =>
-              OnBoardingTopBGView(index: controller.selectedPage.value, controller: controller)),
+          Obx(() => controller.onBoardingData.isNotEmpty
+              ? OnBoardingTopBGView(
+                  index: controller.selectedPage.value, controller: controller)
+              : const SizedBox.shrink()),
           // Text and Description view with button
           Obx(
             () => Column(
@@ -32,40 +34,50 @@ class OnBoardingScreen extends StatelessWidget {
               children: [
                 SizedBox(
                   height: Get.height / 1.4,
-                  child: PageView.builder(
-                    controller: controller.pageController,
-                    itemCount: controller.onBoardingData.length,
-                    onPageChanged: controller.onPageChanged,
-                    itemBuilder: (context, index) {
-                      OnBoarding data = controller.onBoardingData[index];
-                      return OnBoardingView(
-                        title: (data.title ?? "").tr,
-                        description: (data.description ?? '').tr,
-                      );
-                    },
-                  ),
+                  child: controller.onBoardingData.isNotEmpty
+                      ? PageView.builder(
+                          controller: controller.pageController,
+                          itemCount: controller.onBoardingData.length,
+                          onPageChanged: controller.onPageChanged,
+                          itemBuilder: (context, index) {
+                            OnBoarding data = controller.onBoardingData[index];
+                            return OnBoardingView(
+                              title: (data.title ?? "").tr,
+                              description: (data.description ?? '').tr,
+                            );
+                          },
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        ),
                 ),
                 SizedBox(
                   width: Get.width / 3,
                   height: 20,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      controller.onBoardingData.length,
-                      (index) {
-                        return Expanded(
-                          child: Obx(() {
-                            bool isSelected = controller.selectedPage.value == index;
-                            return Container(
-                                height: 1,
-                                constraints: const BoxConstraints(maxWidth: 1),
-                                margin: const EdgeInsets.symmetric(horizontal: 2),
-                                color: whitePure(context).withValues(alpha: isSelected ? 1 : .4));
-                          }),
-                        );
-                      },
-                    ),
-                  ),
+                  child: controller.onBoardingData.isNotEmpty
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            controller.onBoardingData.length,
+                            (index) {
+                              return Expanded(
+                                child: Obx(() {
+                                  bool isSelected =
+                                      controller.selectedPage.value == index;
+                                  return Container(
+                                      height: 1,
+                                      constraints:
+                                          const BoxConstraints(maxWidth: 1),
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 2),
+                                      color: whitePure(context).withValues(
+                                          alpha: isSelected ? 1 : .4));
+                                }),
+                              );
+                            },
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                 ),
                 const SizedBox(height: 18),
                 TextButtonCustom(
@@ -89,11 +101,19 @@ class OnBoardingTopBGView extends StatelessWidget {
   final int index;
   final OnBoardingScreenController controller;
 
-  const OnBoardingTopBGView({super.key, required this.index, required this.controller});
+  const OnBoardingTopBGView(
+      {super.key, required this.index, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     double imageHeight = 400;
+
+    // Safety check to prevent index out of bounds
+    if (controller.onBoardingData.isEmpty ||
+        index >= controller.onBoardingData.length) {
+      return const SizedBox.shrink();
+    }
+
     return SafeArea(
       bottom: false,
       child: AnimatedSwitcher(
@@ -101,7 +121,8 @@ class OnBoardingTopBGView extends StatelessWidget {
           child: CustomImage(
               key: ValueKey<int>(index),
               size: Size(Get.width, imageHeight),
-              image: (controller.onBoardingData[index].image ?? '').addBaseURL(),
+              image:
+                  (controller.onBoardingData[index].image ?? '').addBaseURL(),
               radius: 0,
               isShowPlaceHolder: true,
               fit: BoxFit.fitHeight,
@@ -114,7 +135,8 @@ class OnBoardingView extends StatelessWidget {
   final String title;
   final String description;
 
-  const OnBoardingView({super.key, required this.title, required this.description});
+  const OnBoardingView(
+      {super.key, required this.title, required this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +147,8 @@ class OnBoardingView extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyleCustom.unboundedBlack900(fontSize: 22, color: whitePure(context)),
+            style: TextStyleCustom.unboundedBlack900(
+                fontSize: 22, color: whitePure(context)),
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
             maxLines: AppRes.titleMaxLine,
@@ -133,7 +156,8 @@ class OnBoardingView extends StatelessWidget {
           const SizedBox(height: 20),
           Text(
             description,
-            style: TextStyleCustom.outFitRegular400(fontSize: 19, color: whitePure(context)),
+            style: TextStyleCustom.outFitRegular400(
+                fontSize: 19, color: whitePure(context)),
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
             maxLines: AppRes.descriptionMaxLine,

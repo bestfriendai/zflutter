@@ -83,17 +83,37 @@ class AuthScreenController extends BaseController {
       return showSnackBar(LKey.passwordMismatch.tr);
     }
     showLoader();
-    UserCredential? credential = await createUserWithEmailAndPassword();
-    if (credential != null) {
-      await _registration(
-          identity: emailController.text.trim(),
-          loginMethod: LoginMethod.email,
-          fullname: fullNameController.text.trim());
-      credential.user?.updateDisplayName(fullNameController.text.trim());
-      credential.user?.sendEmailVerification();
-      Get.back();
-      Get.back();
-      showSnackBar(LKey.verificationLinkSent.tr);
+    try {
+      Loggers.info('Starting email registration process...');
+      UserCredential? credential = await createUserWithEmailAndPassword();
+      if (credential != null) {
+        Loggers.info('Firebase user created: ${credential.user?.email}');
+        user.User? data = await _registration(
+            identity: emailController.text.trim(),
+            loginMethod: LoginMethod.email,
+            fullname: fullNameController.text.trim());
+
+        if (data != null) {
+          credential.user?.updateDisplayName(fullNameController.text.trim());
+          credential.user?.sendEmailVerification();
+          Get.back();
+          Get.back();
+          showSnackBar(LKey.verificationLinkSent.tr);
+          Loggers.info('Registration completed successfully');
+        } else {
+          stopLoader();
+          showSnackBar('Registration failed. Please try again.');
+          Loggers.error('Registration failed - no user data returned');
+        }
+      } else {
+        stopLoader();
+        showSnackBar('Failed to create account. Please try again.');
+        Loggers.error('Firebase user creation failed');
+      }
+    } catch (e) {
+      stopLoader();
+      showSnackBar('Registration failed: ${e.toString()}');
+      Loggers.error('Registration Error: $e');
     }
   }
 
@@ -101,21 +121,41 @@ class AuthScreenController extends BaseController {
     showLoader();
     UserCredential? credential;
     try {
+      Loggers.info('Starting Google Sign-In process...');
       credential = await signInWithGoogle();
+      Loggers.info('Google Sign-In successful: ${credential.user?.email}');
     } catch (e) {
-      Loggers.error(e);
-      Get.back();
+      Loggers.error('Google Sign-In Error: $e');
+      stopLoader();
+      showSnackBar('Google Sign-In failed: ${e.toString()}');
+      return;
     }
 
-    if (credential?.user == null) return;
-    user.User? data = await _registration(
-        identity: credential?.user?.email ?? '',
-        loginMethod: LoginMethod.google,
-        fullname: credential?.user?.displayName ??
-            credential?.user?.email?.split('@')[0]);
-    Get.back();
-    if (data != null) {
-      _navigateScreen(data);
+    if (credential.user == null) {
+      stopLoader();
+      showSnackBar('Google Sign-In was cancelled.');
+      return;
+    }
+
+    try {
+      Loggers.info('Starting user registration process...');
+      user.User? data = await _registration(
+          identity: credential.user!.email ?? '',
+          loginMethod: LoginMethod.google,
+          fullname: credential.user!.displayName ??
+              credential.user!.email?.split('@')[0]);
+      stopLoader();
+      if (data != null) {
+        Loggers.info('Registration successful, navigating to dashboard');
+        _navigateScreen(data);
+      } else {
+        Loggers.error('Registration failed - no user data returned');
+        showSnackBar('Registration failed. Please try again.');
+      }
+    } catch (e) {
+      Loggers.error('Registration Error: $e');
+      stopLoader();
+      showSnackBar('Registration failed: ${e.toString()}');
     }
   }
 
@@ -221,17 +261,28 @@ class AuthScreenController extends BaseController {
   }
 
   Future<UserCredential> signInWithGoogle() async {
+    // Configure GoogleSignIn with web client ID for better compatibility
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+      // Web client ID from google-services.json
+      serverClientId:
+          '579171100731-ihit3be1j8k4fih68hbgnjk45lo4vt34.apps.googleusercontent.com',
+    );
+
     // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+    if (googleUser == null) {
+      throw Exception('Google Sign-In was cancelled');
+    }
 
     // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
     // Create a new credential
     final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
     );
 
     // Once signed in, return the UserCredential

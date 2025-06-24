@@ -18,8 +18,18 @@ class OnBoardingScreenController extends BaseController {
   }
 
   void _fetchOnBoarding() {
-    for (var element
-        in (SessionManager.instance.getSettings()?.onBoarding ?? [])) {
+    List<OnBoarding> onBoardingList =
+        SessionManager.instance.getSettings()?.onBoarding ?? [];
+
+    if (onBoardingList.isEmpty) {
+      // If no onboarding data is available, redirect to login screen
+      Future.delayed(const Duration(milliseconds: 500), () {
+        Get.off(() => const LoginScreen());
+      });
+      return;
+    }
+
+    for (var element in onBoardingList) {
       onBoardingData.add(element);
     }
   }

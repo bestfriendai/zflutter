@@ -4,7 +4,7 @@ const String apiKey = 'retry123';
 
 String notificationTopic = "shortzz";
 
-String revenueCatAndroidApiKey = "your_revenueCat_android_api_key";
-String revenueCatAppleApiKey = "your_revenueCat_iOS_api_key";
+String revenueCatAndroidApiKey = "goog_test_android_key_placeholder";
+String revenueCatAppleApiKey = "appl_test_ios_key_placeholder";
 
-String branchKey = "your_branch_key";
+String branchKey = "key_live_kqtbuDA7YlSbYoY9HL5F0cemEzehlhQg";

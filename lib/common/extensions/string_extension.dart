@@ -130,7 +130,9 @@ extension StringExtention on String {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       stops: const [0.1, 1],
-      colors: [colors.first, colors.last],
+      colors: colors.isEmpty
+          ? [Colors.grey.shade300, Colors.grey.shade600]
+          : [colors.first, colors.length > 1 ? colors.last : colors.first],
     );
   }
 }

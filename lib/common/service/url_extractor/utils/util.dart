@@ -4,7 +4,7 @@ import 'package:html/dom.dart';
 extension GetMethod on Map {
   String? get(dynamic key) {
     var value = this[key];
-    if (value is List) return value.first;
+    if (value is List) return value.isNotEmpty ? value.first : null;
     return value?.toString();
   }
 

@@ -57,7 +57,7 @@
                 <!-- REPLACE `android:scheme` with your Android URI scheme -->
                 <data
                     android:host="open"
-                    android:scheme="your_android_scheme" />
+                    android:scheme="shortzz" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -72,10 +72,10 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- REPLACE `android:host` with your `app.link` domain -->
                 <data android:scheme="https" />
-                <data android:host="your_default_link_domain" />
+                <data android:host="shortzz.app.link" />
                 <!-- REPLACE `android:host` with your `-alternate` domain (required for proper functioning of App Links and Deepviews) -->
                 <data android:scheme="https" />
-                <data android:host="your_alternate_link_domain" />
+                <data android:host="shortzz-alternate.app.link" />
             </intent-filter>
 
         </activity>
@@ -87,7 +87,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="your_google_map_api" />
+            android:value="AIzaSyBf8dKwWsFvp8MlNkkzjyR26eM4649baP0" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="shortzz" />
@@ -95,7 +95,7 @@
         <!-- REPLACE `BranchKey` with the value from your Branch Dashboard -->
         <meta-data
             android:name="io.branch.sdk.BranchKey"
-            android:value="your_branch_key" />
+            android:value="key_live_kqtbuDA7YlSbYoY9HL5F0cemEzehlhQg" />
         <meta-data
             android:name="flutter_deeplinking_enabled"
             android:value="false" />

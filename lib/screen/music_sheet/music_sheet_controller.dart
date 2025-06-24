@@ -16,7 +16,11 @@ import 'package:shortzz/screen/selected_music_sheet/selected_music_sheet.dart';
 import 'package:shortzz/screen/selected_music_sheet/selected_music_sheet_controller.dart';
 
 class MusicSheetController extends BaseController {
-  List<String> categories = [LKey.explore.tr, LKey.categories.tr, LKey.saved.tr];
+  List<String> categories = [
+    LKey.explore.tr,
+    LKey.categories.tr,
+    LKey.saved.tr
+  ];
   RxInt selectedMusicCategory = 0.obs;
   int videoSecond;
   RxBool isMusicDownloading = false.obs;
@@ -51,11 +55,20 @@ class MusicSheetController extends BaseController {
 
   getUserData() {
     User? user = SessionManager.instance.getUser();
-    savedMusicIds.value = user?.savedMusicIds == null
-        ? []
-        : (user?.savedMusicIds ?? '').split(',').map((e) {
-            return int.parse(e);
-          }).toList();
+    String musicIdsString = user?.savedMusicIds ?? '';
+    if (musicIdsString.isEmpty) {
+      savedMusicIds.value = [];
+    } else {
+      try {
+        savedMusicIds.value = musicIdsString
+            .split(',')
+            .where((e) => e.trim().isNotEmpty)
+            .map((e) => int.parse(e.trim()))
+            .toList();
+      } catch (e) {
+        savedMusicIds.value = [];
+      }
+    }
   }
 
   onChangedMusicCategories(int index) {
@@ -87,7 +100,8 @@ class MusicSheetController extends BaseController {
 
   void fetchMusicExplore({bool isEmpty = false}) async {
     isLoading.value = true;
-    int? lastItemId = isEmpty || exploreMusicList.isEmpty ? null : exploreMusicList.last.id;
+    int? lastItemId =
+        isEmpty || exploreMusicList.isEmpty ? null : exploreMusicList.last.id;
     List<Music> items =
         await PostService.instance.fetchMusicExplore(lastItemId: lastItemId);
     if (isEmpty) {
@@ -103,7 +117,8 @@ class MusicSheetController extends BaseController {
       return Loggers.error('Invalid Id : $id');
     }
     isLoading.value = true;
-    int? lastItemId = isEmpty || categoryMusicList.isEmpty ? null : categoryMusicList.last.id;
+    int? lastItemId =
+        isEmpty || categoryMusicList.isEmpty ? null : categoryMusicList.last.id;
     List<Music> items = await PostService.instance
         .fetchMusicByCategories(lastItemId: lastItemId, categoryId: id);
     if (isEmpty) {
@@ -126,7 +141,8 @@ class MusicSheetController extends BaseController {
   void searchMusic(String keyword, {bool isEmpty = false}) async {
     List<Music> items = await PostService.instance.searchMusic(
       keyword: keyword,
-      lastItemId: searchMusicList.isEmpty || isEmpty ? null : searchMusicList.last.id,
+      lastItemId:
+          searchMusicList.isEmpty || isEmpty ? null : searchMusicList.last.id,
     );
 
     if (isEmpty) {
@@ -154,11 +170,21 @@ class MusicSheetController extends BaseController {
 
   void updateSavedMusicIds(List<int> savedMusicIds) async {
     await UserService.instance.updateUserDetails(savedMusicIds: savedMusicIds);
-    this.savedMusicIds.value =
-        (SessionManager.instance.getUser()?.savedMusicIds ?? '')
+    String musicIdsString =
+        SessionManager.instance.getUser()?.savedMusicIds ?? '';
+    if (musicIdsString.isEmpty) {
+      this.savedMusicIds.value = [];
+    } else {
+      try {
+        this.savedMusicIds.value = musicIdsString
             .split(',')
-        .map((e) => int.parse(e))
-        .toList();
+            .where((e) => e.trim().isNotEmpty)
+            .map((e) => int.parse(e.trim()))
+            .toList();
+      } catch (e) {
+        this.savedMusicIds.value = [];
+      }
+    }
   }
 
   void onCancelTap() {
@@ -182,8 +208,10 @@ class MusicSheetController extends BaseController {
 
     if (isMusicDownloading.value) return;
     isMusicDownloading.value = true;
-    String downloadMusicPath =
-        (await DefaultCacheManager().downloadFile(music.sound?.addBaseURL() ?? '')).file.path;
+    String downloadMusicPath = (await DefaultCacheManager()
+            .downloadFile(music.sound?.addBaseURL() ?? ''))
+        .file
+        .path;
     isMusicDownloading.value = false;
     if (downloadMusicPath.isNotEmpty) {
       SelectedMusic? selectedMusic = await Get.bottomSheet<SelectedMusic>(
@@ -192,9 +220,7 @@ class MusicSheetController extends BaseController {
               totalVideoSecond: videoSecond),
           enableDrag: false,
           isScrollControlled: true);
-      if (selectedMusic != null) {
-        Get.back(result: selectedMusic);
-      }
+      Get.back(result: selectedMusic);
     }
   }
 

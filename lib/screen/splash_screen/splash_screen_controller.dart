@@ -19,7 +19,6 @@ import 'package:shortzz/model/general/settings_model.dart';
 import 'package:shortzz/screen/auth_screen/login_screen.dart';
 import 'package:shortzz/screen/dashboard_screen/dashboard_screen.dart';
 import 'package:shortzz/screen/gif_sheet/gif_sheet_controller.dart';
-import 'package:shortzz/screen/select_language_screen/select_language_screen.dart';
 
 class SplashScreenController extends BaseController {
   late StreamSubscription _subscription;
@@ -139,9 +138,8 @@ class SplashScreenController extends BaseController {
           });
         } else {
           print(
-              '❌ FETCH_SETTINGS: User not logged in, navigating to language selection');
-          Get.off(() => const SelectLanguageScreen(
-              languageNavigationType: LanguageNavigationType.fromStart));
+              '❌ FETCH_SETTINGS: User not logged in, navigating directly to login');
+          Get.off(() => const LoginScreen());
         }
       } else {
         print('❌ FETCH_SETTINGS: showNavigate is false, not proceeding');
